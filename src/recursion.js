@@ -123,8 +123,8 @@ var palindrome = function (string) {
 var modulo = function (x, y) {
   if (x === 0 && y === 0) return NaN;
   if (x === y) return 0;
-  if (x < 0 && y < 0) return -modulo(-x, -y)
-  if (x < 0 && y > 0) return -modulo(-x + y, y)
+  if (x < 0 && y < 0) return -modulo(-x, -y);
+  if (x < 0 && y > 0) return -modulo(-x + y, y);
   if (x < y) return x;
 
   return modulo(x - y, y);
@@ -158,9 +158,7 @@ var divide = function (x, y) {
 // gcd(4,36); // 4
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
-var gcd = function (x, y) {
-
-};
+var gcd = function (x, y) {};
 
 // 15. Write a function that compares each character of two strings and returns true if
 // both are identical.
@@ -181,7 +179,7 @@ var createArray = function (str) {
   // Base case:
   if (str.length === 1) return [str];
 
-  return [].concat(str[0], createArray(str.slice(1)))
+  return [].concat(str[0], createArray(str.slice(1)));
 };
 
 // 17. Reverse the order of an array
@@ -197,7 +195,7 @@ var reverseArr = function (array) {
 // buildList(7,3) // [7,7,7]
 var buildList = function (elem, length) {
   // Base case:
-  let result = []
+  let result = [];
   if (length === 1) {
     if (typeof elem === "object") return elem;
     return [elem];
@@ -223,7 +221,6 @@ var fizzBuzz = function (n) {
     if (n % 5 === 0) return "Buzz";
     return n;
   }
-
 
   let result = [];
   for (let i = 1; i <= n; i++) {
@@ -254,30 +251,99 @@ var countOccurrence = function (array, value) {
 
 // 21. Write a recursive version of map.
 // rMap([1,2,3], timesTwo); // [2,4,6]
-var rMap = function (array, callback) {};
+var rMap = function (array, callback) {
+  // Base case:
+  if (array.length === 1) {
+    return callback(array);
+  }
+
+  return [].concat(callback(array[0]), rMap(array.slice(1), callback));
+};
 
 // 22. Write a function that counts the number of times a key occurs in an object.
 // var obj = {'e':{'x':'y'},'t':{'r':{'e':'r'},'p':{'y':'r'}},'y':'e'};
 // countKeysInObj(obj, 'r') // 1
 // countKeysInObj(obj, 'e') // 2
-var countKeysInObj = function (obj, key) {};
+var countKeysInObj = function (obj, key) {
+  if (typeof obj !== 'object') {
+    return 0;
+  }
+
+  let count = 0;
+  for (let eachKey of Object.keys(obj)) {
+    let current = obj[eachKey];
+
+    if (key === eachKey) count++;
+    count += countKeysInObj(current, key);
+  }
+  return count;
+};
 
 // 23. Write a function that counts the number of times a value occurs in an object.
 // var obj = {'e':{'x':'y'},'t':{'r':{'e':'r'},'p':{'y':'r'}},'y':'e'};
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
-var countValuesInObj = function (obj, value) {};
+var countValuesInObj = function (obj, value) {
+  // Base case:
+  if (typeof obj !== 'object') {
+    return obj === value;
+  }
+
+  // Recursive case:
+  let count = 0;
+  for (let key of Object.keys(obj)) {
+    let currentValue = obj[key];
+
+    count += countValuesInObj(currentValue, value);
+  }
+  return count;
+};
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
-var replaceKeysInObj = function (obj, oldKey, newKey) {};
+var replaceKeysInObj = function (obj, oldKey, newKey) {
+  // Base case:
+  if (typeof obj !== "object") {
+    return obj;
+  }
+
+  // Recursive case:
+  for (let key of Object.keys(obj)) {
+    let current = obj[key];
+
+    let val = replaceKeysInObj(current, oldKey, newKey);
+    if (key === oldKey) {
+      obj[newKey] = val;
+      delete obj[oldKey];
+    }
+  }
+  return obj;
+};
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
 // number is the sum of the previous two.
 // Example: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34.....
 // fibonacci(5); // [0,1,1,2,3,5]
 // Note: The 0 is not counted.
-var fibonacci = function (n) {};
+var fibonacci = function (n) {
+  const sum = (a, b) => a + b;
+  if (Array.isArray(n)) {
+    return n.reduce(sum, 0);
+
+  }
+  if (n <= 0) return null;
+
+
+  // Recursive case:
+  // let current = fibonacci(n - 1) + fibonacci(n - 2)
+  let result = [0, 1];
+  for (let i = 2; i <= n; i++) {
+    let nextNum = fibonacci(result.slice(i - 2, i));
+    result.push(nextNum);
+  }
+
+  return result;
+};
 
 // 26. Return the Fibonacci number located at index n of the Fibonacci sequence.
 // [0,1,1,2,3,5,8,13,21]
