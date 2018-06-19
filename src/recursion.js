@@ -350,16 +350,40 @@ var fibonacci = function (n) {
 // nthFibo(5); // 5
 // nthFibo(7); // 13
 // nthFibo(3); // 2
-var nthFibo = function (n) {};
+var nthFibo = function (n) {
+  if (n < 0) return null;
+  if (n === 0) return 0;
+  if (n === 1 || n === 2) return 1;
+
+  return nthFibo(n - 1) + nthFibo(n - 2);
+};
 
 // 27. Given an array of words, return a new array containing each word capitalized.
 // var words = ['i', 'am', 'learning', 'recursion'];
 // capitalizedWords(words); // ['I', 'AM', 'LEARNING', 'RECURSION']
-var capitalizeWords = function (array) {};
+var capitalizeWords = function (array) {
+  if (!Array.isArray(array)) return array.toUpperCase();
+
+  let result = [];
+  for (let i of array) {
+    let current = capitalizeWords(i);
+    result.push(current);
+  }
+  return result;
+};
 
 // 28. Given an array of strings, capitalize the first letter of each index.
 // capitalizeFirst(['car','poop','banana']); // ['Car','Poop','Banana']
-var capitalizeFirst = function (array) {};
+var capitalizeFirst = function (array) {
+  if (!Array.isArray(array)) return array[0].toUpperCase() + array.slice(1);
+
+  let result = [];
+  for (let i of array) {
+    let current = capitalizeFirst(i);
+    result.push(current);
+  }
+  return result;
+};
 
 // 29. Return the sum of all even numbers in an object containing nested objects.
 // var obj1 = {
@@ -370,15 +394,47 @@ var capitalizeFirst = function (array) {};
 //   e: {e: {e: 2}, ee: 'car'}
 // };
 // nestedEvenSum(obj1); // 10
-var nestedEvenSum = function (obj) {};
+var nestedEvenSum = function (obj) {
+  // Base case:
+  if (typeof obj !== 'object') {
+    return (typeof obj === 'number' && obj % 2 === 0) ? obj : 0;
+  }
+
+  let result = 0;
+  for (let key of Object.keys(obj)) {
+    let current = nestedEvenSum(obj[key]);
+    result += current;
+  }
+  return result;
+};
 
 // 30. Flatten an array containing nested arrays.
 // flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
-var flatten = function (array) {};
+var flatten = function (array) {
+  // Base case:
+  if (!Array.isArray(array)) return array;
+  if (!array.length) return null;
+
+  let [first, ...rest] = array;
+
+  return [].concat(flatten(first), flatten(rest))
+    .filter(v => v !== null);
+};
 
 // 31. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {p:1, o:2, t:2, a:1}
-var letterTally = function (str, obj) {};
+var letterTally = function (str, obj) {
+  let result = {};
+
+  for (let char of str) {
+    if (result.hasOwnProperty(char)) {
+      result[char]++
+    } else {
+      result[char] = 1;
+    }
+  }
+  return result;
+};
 
 // 32. Eliminate consecutive duplicates in a list. If the list contains repeated
 // elements they should be replaced with a single copy of the element. The order of the
